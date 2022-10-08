@@ -110,6 +110,7 @@
               fill="currentColor"
             /></svg
         ></a>
+        {{ res }}
       </div>
     </div>
   </div>
@@ -118,5 +119,21 @@
 <script>
 export default {
   name: 'NuxtTutorial',
+  data(){
+    return {
+      res: '',
+    }
+  },
+  async mounted(){
+    console.log("hey!!!")
+    await this.getPokemon()
+  },
+  methods: {
+    async getPokemon() {
+      const res = await this.$axios.$get('https://pokeapi.co/api/v2/pokemon/ditto')
+      console.log(res)
+      return this.res = res
+    }
+  }
 }
 </script>
