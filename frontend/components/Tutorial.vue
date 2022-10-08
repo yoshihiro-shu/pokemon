@@ -3,6 +3,7 @@
   <div
     class="relative flex items-top justify-center min-h-screen bg-gray-100 sm:items-center sm:pt-0"
   >
+    <h1>{{ text }}</h1>
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css"
       rel="stylesheet"
@@ -110,30 +111,35 @@
               fill="currentColor"
             /></svg
         ></a>
-        {{ res }}
+        <h1>pokemon: {{ pokemon }}</h1>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
+import { defineComponent, ref, useAsync, useContext, useFetch } from '@nuxtjs/composition-api'
+
+export default defineComponent({
   name: 'NuxtTutorial',
-  data(){
+  setup() {
+    const { $axios } = useContext()
+    const text = ref('Hello, World!')
+    const pokemon = ref()
+
+    const getDitto = async()=> {
+      const res = await $axios.$get('https://pokeapi.co/api/v2/pokemon/ditto')
+      pokemon.value = res.name
+    }
+
+    getDitto()
+
     return {
-      res: '',
+      text,
+      pokemon,
+      getDitto
     }
+
   },
-  async mounted(){
-    console.log("hey!!!")
-    await this.getPokemon()
-  },
-  methods: {
-    async getPokemon() {
-      const res = await this.$axios.$get('https://pokeapi.co/api/v2/pokemon/ditto')
-      console.log(res)
-      return this.res = res
-    }
-  }
-}
+})
 </script>
