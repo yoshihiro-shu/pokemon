@@ -117,27 +117,38 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref, useAsync, useContext, useFetch } from '@nuxtjs/composition-api'
+<script lang="ts">
+import { defineComponent, ref, useAsync, useContext, onMounted, onUpdated, onUnmounted } from '@nuxtjs/composition-api'
+import { getPokemonURL } from '../api/pokemon'
 
 export default defineComponent({
   name: 'NuxtTutorial',
   setup() {
     const { $axios } = useContext()
-    const text = ref('Hello, World!')
-    const pokemon = ref()
+    const text = ref<string>('Hello, World!')
+    const pokemon = ref<string>('')
 
-    const getDitto = async()=> {
-      const res = await $axios.$get('https://pokeapi.co/api/v2/pokemon/ditto')
+    const updatePokemon = async ()=> {
+      const res = await $axios.$get(getPokemonURL())
       pokemon.value = res.name
     }
 
-    getDitto()
+
+    updatePokemon()
+
+    onMounted(() => {
+      console.log('mounted!')
+    })
+    onUpdated(() => {
+      console.log('updated!')
+    })
+    onUnmounted(() => {
+      console.log('unmounted!')
+    })
 
     return {
       text,
       pokemon,
-      getDitto
     }
 
   },
